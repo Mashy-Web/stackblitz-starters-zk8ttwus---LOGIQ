@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LOGIQ - GCSE Learning Matrix</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- TOP NAVIGATION HEADER -->
+<header id="top-nav" class="top-navbar" style="display: none;">
+  <div class="nav-left">
+    <span class="brand-logo">LOGIQ</span>
+  </div>
+  <div class="nav-center">
+    <span id="nav-username" class="user-display"></span>
+    <span class="study-time-badge">⏱️ Today: <strong id="header-today-time">0</strong> mins</span>
+  </div>
+  <div class="nav-right">
+    <button id="nav-timer-btn" class="icon-btn" onclick="openTimerModal()">⏱️ Study Timer</button>
+    <button id="nav-settings-btn" class="icon-btn" onclick="toggleSettingsModal(true)">⚙️ Settings</button>
+    <button id="nav-logout-btn" class="btn-secondary" onclick="logout()">Sign Out</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- 1. SIGN UP VIEW -->
+  <section id="view-signup" class="card view-panel">
+    <h1>Create LOGIQ Student Account</h1>
+    <p class="subtitle">Join LOGIQ to personalize your GCSE retention matrix.</p>
+    <p id="signup-error" class="error-msg" style="display: none; color: red; margin-bottom: 10px;"></p>
+
+    <form id="signup-form" onsubmit="handleSignUp(event)">
+      <div class="form-group">
+        <label for="signup-username">Username *</label>
+        <input type="text" id="signup-username" placeholder="e.g. AlexGCSE" required />
+      </div>
+
+      <div class="form-group">
+        <label for="signup-email">Email Address *</label>
+        <input type="email" id="signup-email" placeholder="alex@school.com" required />
+      </div>
+
+      <div class="form-group password-group">
+        <label for="signup-password">Password *</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="signup-password" placeholder="••••••••" required />
+          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('signup-password', this)">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">Continue to Subject Setup</button>
+    </form>
+
+    <p class="auth-toggle-link">Already registered? <a href="#" onclick="event.preventDefault(); switchView('signin');">Sign In here</a></p>
+  </section>
+
+  <!-- 2. ONBOARDING & EXAM BOARD SETUP -->
+  <section id="view-onboarding" class="card view-panel" style="display: none;">
+    <h2>📚 Set Up Your GCSE Subjects</h2>
+    <p class="subtitle">Select your subjects, exam boards, and initial confidence ratings.</p>
+
+    <div id="onboarding-subjects-container"></div>
+
+    <div class="form-group" style="margin-top: 16px;">
+      <label for="retention-days"><strong>Retention Drop Days</strong> (Ideally under 5)</label>
+      <p class="help-text" style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">
+        This is how many days it is before confidence levels drop by 1
+      </p>
+      <input type="number" id="retention-days" min="1" max="14" value="3" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+    </div>
+
+    <button class="btn-primary" onclick="completeOnboarding()" style="margin-top: 16px;">Save Subjects & Proceed to Dashboard</button>
+  </section>
+
+  <!-- 3. EMAIL VERIFICATION -->
+  <section id="view-verification" class="card view-panel" style="display: none;">
+    <h2>📧 Check Your Inbox</h2>
+    <p>We've generated a 6-digit verification code for <strong id="verify-email-display"></strong>.</p>
+    <div class="verification-box">
+      <p>Your Verification Code: <strong id="generated-code-display" class="code-highlight">123456</strong></p>
+    </div>
+    <div class="form-group" style="margin-top: 16px;">
+      <label for="verification-code-input">Enter 6-Digit Code</label>
+      <input type="text" id="verification-code-input" placeholder="123456" maxlength="6" required />
+    </div>
+
+    <p id="verification-error" class="error-msg" style="display: none;"></p>
+    <button class="btn-primary" onclick="completeEmailVerification()">Verify Account & Sign In</button>
+  </section>
+
+  <!-- 4. SIGN IN VIEW -->
+  <section id="view-signin" class="card view-panel" style="display: none;">
+    <h1>Sign In to LOGIQ</h1>
+    <p class="subtitle">Welcome back! Please enter your details.</p>
+
+    <p id="signin-error" class="error-msg" style="display: none; color: red; margin-bottom: 10px;"></p>
+
+    <form id="signin-form" onsubmit="handleSignIn(event)">
+      <div class="form-group">
+        <label for="signin-email">Email Address</label>
+        <input type="email" id="signin-email" placeholder="alex@school.com" required />
+      </div>
+
+      <div class="form-group password-group">
+        <label for="signin-password">Password</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="signin-password" placeholder="••••••••" required />
+          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('signin-password', this)">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+
+    <p class="auth-toggle-link">Need an account? <a href="#" onclick="event.preventDefault(); switchView('signup');">Register here</a></p>
+    <p class="auth-toggle-link" style="margin-top: 8px;"><a href="#" onclick="event.preventDefault(); switchView('forgot');">Forgot password?</a></p>
+  </section>
+
+  <!-- 4.5 FORGOT PASSWORD VIEW -->
+  <section id="view-forgot" class="card view-panel" style="display: none;">
+    <h1>Reset Password</h1>
+    <p class="subtitle">Enter your email and we'll let you reset your password.</p>
+
+    <p id="forgot-error" class="error-msg" style="display: none;"></p>
+    <p id="forgot-success" class="success-msg" style="display: none; color: green;"></p>
+
+    <form id="forgot-form" onsubmit="handleForgotPassword(event)">
+      <div class="form-group">
+        <label for="forgot-email">Email Address *</label>
+        <input type="email" id="forgot-email" placeholder="alex@school.com" required />
+      </div>
+
+      <div class="form-group" id="new-password-group" style="display: none;">
+        <label for="forgot-new-password">New Password *</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="forgot-new-password" placeholder="••••••••" />
+          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('forgot-new-password', this)">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" id="forgot-submit-btn" class="btn-primary">Reset Password</button>
+    </form>
+
+    <p class="auth-toggle-link"><a href="#" onclick="event.preventDefault(); switchView('signin');">Back to Sign In</a></p>
+  </section>
+
+  <!-- 5. DASHBOARD VIEW -->
+  <section id="view-dashboard" class="card view-panel dashboard-card" style="display: none;">
+    <div class="dashboard-header">
+      <h1>GCSE Retention Matrix</h1>
+      <p class="subtitle">Track your recall strength and hit your daily targets.</p>
+    </div>
+
+    <!-- Top Stats & Streak Bar -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">🔥</span>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-streak">0 Days</span>
+          <span class="stat-label">Study Streak</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">⚡</span>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-due">0 Topics</span>
+          <span class="stat-label">Needs Review</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🎯</span>
+        <div class="stat-info">
+          <span class="stat-value" id="stat-mastery">0%</span>
+          <span class="stat-label" title="Average confidence across all subtopics out of 100%">Overall Retention (?)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Needs Review Queue -->
+    <div class="dashboard-section">
+      <h2>⏱️ Needs Review</h2>
+      <div class="review-list" id="review-queue-container"></div>
+    </div>
+
+    <!-- Subject Progress Matrix -->
+    <div class="dashboard-section">
+      <div class="section-title-row">
+        <h2>📚 Subject Retention Matrix</h2>
+        <button class="btn-sm btn-outline" onclick="openAddSubjectModal()">+ Manage Subjects</button>
+      </div>
+      <div class="subject-grid" id="subject-grid-container"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- TIMER MODAL -->
+<div id="timer-modal" class="modal-overlay" style="display: none;">
+ <div class="modal-content card">
+   <div class="modal-header">
+     <h2>⏱️ Study Session Timer</h2>
+     <button class="close-btn" onclick="closeTimerModal()">&times;</button>
+   </div>
+   <div class="modal-body">
+     <div class="timer-display" id="timer-clock">30:00</div>
+     <div class="form-group">
+       <label for="timer-minutes-input">Set Duration (5 - 120 mins):</label>
+       <input type="number" id="timer-minutes-input" value="30" min="5" max="120" onchange="adjustTimerDuration(this.value)" />
+     </div>
+     <div class="form-group">
+       <label for="timer-subject-select">Target Subject:</label>
+       <select id="timer-subject-select" onchange="updateTimerSubtopicDropdown(this.value)"></select>
+     </div>
+     <div class="form-group">
+       <label for="timer-subtopic-select">Target Subtopic:</label>
+       <select id="timer-subtopic-select"></select>
+     </div>
+     <div class="timer-controls">
+       <button id="timer-start-btn" class="btn-primary" onclick="toggleTimer()">Start Timer</button>
+       <button class="btn-secondary" onclick="resetTimer()">Reset</button>
+     </div>
+   </div>
+ </div>
+</div>
+
+<!-- CONFIDENCE UPDATE MODAL -->
+<div id="confidence-modal" class="modal-overlay" style="display: none;">
+ <div class="modal-content card">
+   <div class="modal-header">
+     <h2>🎉 Session Complete!</h2>
+   </div>
+   <div class="modal-body">
+     <p>Great focus! How confident do you feel in <strong id="conf-modal-subtopic"></strong> now?</p>
+     <div class="rating-buttons">
+       <button class="btn-rating" onclick="saveUpdatedConfidence(1)">1 - Weak</button>
+       <button class="btn-rating" onclick="saveUpdatedConfidence(2)">2 - Needs Work</button>
+       <button class="btn-rating" onclick="saveUpdatedConfidence(3)">3 - Fair</button>
+       <button class="btn-rating" onclick="saveUpdatedConfidence(4)">4 - Good</button>
+       <button class="btn-rating" onclick="saveUpdatedConfidence(5)">5 - Mastered</button>
+     </div>
+   </div>
+ </div>
+</div>
+
+<!-- ADD / MANAGE SUBJECTS MODAL -->
+<div id="add-subject-modal" class="modal-overlay" style="display: none;">
+ <div class="modal-content card">
+   <div class="modal-header">
+     <h2>📚 Manage Subjects</h2>
+     <button class="close-btn" onclick="closeAddSubjectModal()">&times;</button>
+   </div>
+   <div class="modal-body" id="manage-subjects-body"></div>
+   <div class="modal-footer">
+     <button class="btn-primary" onclick="saveSubjectChanges()">Save Changes</button>
+   </div>
+ </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" class="modal-overlay" style="display: none;">
+ <div class="modal-content card">
+   <div class="modal-header">
+     <h2>⚙️ Account Settings</h2>
+     <button class="close-btn" onclick="toggleSettingsModal(false)">&times;</button>
+   </div>
+   <div class="modal-body">
+     <p><strong>Account Email:</strong> <span id="settings-email-display"></span></p>
+     <hr />
+   </div>
+   <div class="modal-footer">
+     <button class="btn-primary" onclick="toggleSettingsModal(false)">Save & Close</button>
+   </div>
+ </div>
+</div>
+
+<footer class="app-footer" id="main-footer">
+<div class="footer-content">
+ <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiah6yunE_2XIboLQyQsCJFOz3Hpo84AYqn-oEl8XviqXe0A/viewform?usp=publish-editor" target="_blank" class="footer-link">
+   <span>Hate LOGIQ or adore it? Any suggestions? (PS: Yeah, it's a feedback form)</span>
+ </a>
+</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>
