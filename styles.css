@@ -83,7 +83,7 @@
   }
   
   .subtitle {
-    color: #3b82f6; /* Sharp matching blue hue */
+    color: #3b82f6 !important;
     margin-bottom: 24px;
     font-size: 0.95rem;
     font-weight: 500;
