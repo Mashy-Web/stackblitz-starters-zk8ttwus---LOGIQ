@@ -1,6 +1,7 @@
 /* ==========================================
-   Arkendom MVP - #136 Unified Styles
+   Arkendon MVP - #136 Unified Styles
    ========================================== */
+    
    :root {
     --night-green: #87c540;     /* Primary action & highlights */
     --glaucous-blue: #a5c8d1;   /* Structural frame & secondary elements */
@@ -82,7 +83,7 @@
   }
   
   .subtitle {
-    color: var(--text-muted);
+    color: #3b82f6; /* Sharp matching blue hue */
     margin-bottom: 24px;
     font-size: 0.95rem;
     font-weight: 500;
@@ -523,7 +524,7 @@
     font-weight: 800;
     letter-spacing: -1px;
     margin-bottom: 10px;
-    background: linear-gradient(135deg, #fff 30%, #9ca3af 100%);
+    background: linear-gradient(135deg, #4ade80 40%, #047857 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -537,7 +538,7 @@
   
   .hero-description {
     font-size: 1.1rem;
-    color: #9ca3af;
+    color: #10b981;
     max-width: 600px;
     margin: 0 auto 40px auto;
     line-height: 1.6;
@@ -552,7 +553,7 @@
   }
   
   .primary-btn {
-    background: #3b82f6;
+    background: #10b981;
     color: white;
     border: none;
     padding: 14px 28px;
