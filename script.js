@@ -72,10 +72,10 @@ function handleSubjectToggle(subName, detailsEl) {
 
 // Utility: LocalStorage Database Accessors
 function getUsersDB() {
-  return JSON.parse(localStorage.getItem('logiq_users') || '{}');
+  return JSON.parse(localStorage.getItem('arkendon_users') || '{}');
 }
 function saveUsersDB(db) {
-  localStorage.setItem('logiq_users', JSON.stringify(db));
+  localStorage.setItem('arkendon_users', JSON.stringify(db));
   saveProgressToSupabase(db);
 }
 
@@ -246,7 +246,7 @@ async function handleSignIn(event) {
   event.preventDefault();
   const cloudData = await loadProgressFromSupabase();
   if (cloudData) {
-    localStorage.setItem('logiq_users', JSON.stringify(cloudData));
+    localStorage.setItem('arkendon_users', JSON.stringify(cloudData));
   }
   const email = document.getElementById('signin-email').value.trim().toLowerCase();
   const password = document.getElementById('signin-password').value;
