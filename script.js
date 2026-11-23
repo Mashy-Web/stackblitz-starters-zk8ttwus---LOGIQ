@@ -95,7 +95,7 @@ function togglePasswordVisibility(inputId, btn) {
 
 // Navigation & View Routing
 function switchView(viewName) {
-  const views = ['signup', 'onboarding', 'verification', 'signin', 'dashboard', 'forgot'];
+  const views = ['landing page', 'signup', 'onboarding', 'verification', 'signin', 'dashboard', 'forgot'];
   views.forEach(v => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.style.display = (v === viewName) ? 'block' : 'none';

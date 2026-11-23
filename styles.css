@@ -3,12 +3,12 @@
    ========================================== */
     
    :root {
-    --night-green: #87c540;     /* Primary action & highlights */
+    --night-green: #10b981;     /* Primary action & highlights */
     --glaucous-blue: #a5c8d1;   /* Structural frame & secondary elements */
     --ivory-buff: #ebd3a2;      /* Warm accent tone */
     
     --bg-canvas: #f6f3eb;       /* Warm paper canvas background */
-    --bg-surface: #ffffff;      /* Pure white cards */
+    --bg-surface: #f6f3eb;      /* Pure white cards */
     --text-dark: #141c0f;       /* Deep high-contrast ink */
     --text-muted: #55664d;      /* Deep structural olive */
   }
@@ -333,10 +333,21 @@
     margin-bottom: 10px;
   }
   
+  .hero-features h3, .feature-card h3, .features h3 {
+    color: #10b981 !important;
+  }
+  
   .subject-card-header h3 {
     font-size: 0.95rem;
     font-weight: 900;
-    color: var(--text-dark);
+    color: #10b981;
+  }
+  
+
+  .subject-card-header h3 {
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: #10b981;
   }
   
   .progress-bar-container {
@@ -411,7 +422,7 @@
   }
   
   .conf-btn:hover {
-    background: var(--ivory-buff);
+    background: var(--night-green);
   }
   
   .conf-btn.active {
